@@ -1,0 +1,14 @@
+//
+// Created by stott on 8/26/19.
+//
+
+#ifndef MANDELBROTGENERATOR_RENDERWORKER_H
+#define MANDELBROTGENERATOR_RENDERWORKER_H
+
+
+class RenderWorker {
+
+};
+
+
+#endif //MANDELBROTGENERATOR_RENDERWORKER_H

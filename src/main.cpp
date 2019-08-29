@@ -2,6 +2,6 @@
 
 int main()
 {
-    Window win;
+    Window win(800, 1000);
     win.Think();
 }

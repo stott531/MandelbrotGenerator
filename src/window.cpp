@@ -3,17 +3,24 @@
  */
 #include "../incl/window.h"
 
-Window::Window() : m_pixel_map(sf::Points, m_screen_height * m_screen_width)
+#include <SFML/System/Time.hpp>
+#include <iostream>
+
+Window::Window(const int &height, const int &width) : m_pixel_map(sf::Points, height * width),
+                                                      m_camera(std::make_unique<Camera>(height, width)),
+                                                      m_screen_width(width),
+                                                      m_screen_height(height)
 {
     // setup a window for us
     this->create(sf::VideoMode(m_screen_width, m_screen_height), "Mandelbrot Set");
+    this->setFramerateLimit(30);
 }
 
 void Window::Think()
 {
     while (this->isOpen())
     {
-        sf::Event event;
+        sf::Event event{};
         //get all input since the last iteration of the loop
         while (this->pollEvent(event))
         {
@@ -23,12 +30,16 @@ void Window::Think()
                 case sf::Event::Closed:
                     this->close();
                     break;
+                case sf::Event::MouseWheelScrolled:
+                    this->m_camera->Zoom(event.mouseWheelScroll);
                 default:
                     break;
             }
         }
+        sf::Clock clock;
         this->PlotMandelbrotSet();
-
+        std::cout << clock.getElapsedTime().asSeconds() << std::endl;
+        // clear the display, draw the image, show the image
         this->clear();
         this->draw(this->m_pixel_map);
         this->display();
@@ -36,30 +47,44 @@ void Window::Think()
 }
 
 void Window::PlotMandelbrotSet() {
+    // initialize variables outside loops to save memory
     sf::Vertex cur_vertex;
-    complex<double> point, c;
+    complex<float> point, c;
     int iter;
 
-    #pragma omp parallel for collapse(2) private(iter, point, c, cur_vertex)
+    // call to openMP to distribute computations
+    #pragma omp parallel for num_threads(10) collapse(2) private(iter, point, c, cur_vertex)
+
+    // for each row
     for (int i = 0; i < m_screen_height; ++i)
     {
+        // for each pixel in the row
         for (int j = 0; j < m_screen_width; ++j)
         {
-            point = {(double)j/m_screen_width*2.1 - 1.5, (double)i/m_screen_height*2.25 - 1.2};
+            // use rvalue references to initialize values
+            point = {static_cast<float>((float)j/m_screen_width*this->m_camera->GetZoom() - 1.5),
+                     static_cast<float>((float)i/m_screen_height*this->m_camera->GetZoom() - 1.2)};
             c = {0,0};
             iter = 0;
+
+            // iterate while c is smaller than 2
+            // if abs(c) > 2, the sequence diverges
             for (; std::abs(c) < 2 && iter < MAX_ITERATIONS; ++iter) {
                 c = c * c + point;
             }
             cur_vertex.position = {(float)j, (float)i};
-            if (iter >= 25)
+
+            // this controls the precision of the drawing
+            if (iter >= MAX_ITERATIONS)
             {
                 cur_vertex.color = sf::Color::Black;
             }
             else
             {
+                // calculates the color gradiant
                 cur_vertex.color = sf::Color((255*iter)/500, (255*iter)/300, (255*iter)/30);
             }
+            // emplaces the vertex into the pixel map
             this->m_pixel_map[(i * m_screen_width) + j] = cur_vertex;
         }
     }

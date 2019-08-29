@@ -15,7 +15,12 @@ add_executable(MandelbrotGenerator
 
         src/main.cpp
 
-        src/window.cpp )
+        src/window.cpp src/camera.cpp incl/camera.h)
+
+find_package(OpenMP)
+if(OpenMP_CXX_FOUND)
+    target_link_libraries(MandelbrotGenerator PUBLIC OpenMP::OpenMP_CXX)
+endif()
 
 if(SFML_FOUND)
     include_directories("/usr/include")

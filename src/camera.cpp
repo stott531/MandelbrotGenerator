@@ -4,18 +4,37 @@
 
 #include "../incl/camera.h"
 
-Camera::Camera(const int &screen_height, const int &screen_width) :
-    m_center({(float)screen_width/2, (float)screen_height/2})
+Camera::Camera(const int &screen_height, const int &screen_width, Window *window) :
+    m_center({(float)screen_width/2, (float)screen_height/2}), m_window(window)
 {
 
 }
 
 void Camera::Zoom(const sf::Event::MouseWheelScrollEvent &event)
 {
-    this->m_zoom_factor -= event.delta / 10;
+    this->m_zoom_factor -= event.delta / 20;
 }
 
 void Camera::Pan(const sf::Event::MouseMoveEvent &event)
 {
     if (!m_is_panning) return;
+
+    // Calculate the change in mouse position
+    sf::Vector2i deltaMousePosition(event.x, event.y);
+    deltaMousePosition -= m_last_cursor;
+
+    // Shift the view using the delta
+    h_shift += deltaMousePosition.x / 150.;
+    k_shift += deltaMousePosition.y / 150.;
+
+
+    // Set the last mouse position to be the mouse position in this frame
+    m_last_cursor = {event.x, event.y};
+
+
+}
+
+void Camera::TogglePanning(const sf::Event::MouseButtonEvent& event) {
+    if (event.button == sf::Mouse::Right) m_is_panning = !m_is_panning;
+    m_last_cursor = {event.x, event.y};
 }

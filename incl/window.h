@@ -6,10 +6,13 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
+#include <SFML/Graphics/Shader.hpp>
 
 #include "camera.h"
 
 #define MAX_ITERATIONS 150
+
+class Camera;
 
 using std::complex;
 using std::size_t;
@@ -19,7 +22,8 @@ class Window : public sf::RenderWindow {
         Window(const int &height, const int &width);
         void Think();
     protected:
-        void PlotMandelbrotSet();
+        void PlotMandelbrotSetDefault();
+        void PlotMandelbrotSetShaders();
 
     private:
         unsigned int m_screen_width, m_screen_height;

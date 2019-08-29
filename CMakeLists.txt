@@ -11,14 +11,11 @@ find_package(SFML 2 COMPONENTS
         REQUIRED)
 
 add_executable(MandelbrotGenerator
-        incl/camera.h incl
-        incl/renderworker.h
+        incl/window.h
 
         src/main.cpp
 
-        src/camera.cpp
-        src/renderworker.cpp
-        src/window.cpp incl/window.h)
+        src/window.cpp )
 
 if(SFML_FOUND)
     include_directories("/usr/include")

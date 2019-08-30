@@ -12,7 +12,7 @@ Camera::Camera(const int &screen_height, const int &screen_width, Window *window
 
 void Camera::Zoom(const sf::Event::MouseWheelScrollEvent &event)
 {
-    this->m_zoom_factor -= event.delta / 20;
+    this->m_zoom_factor -= event.delta / (m_zoom_factor * 20);
 }
 
 void Camera::Pan(const sf::Event::MouseMoveEvent &event)

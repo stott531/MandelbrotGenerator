@@ -89,7 +89,8 @@ void Window::PlotMandelbrotSetDefault() {
 
             // iterate while c is smaller than 2
             // if abs(c) > 2, the sequence diverges
-            for (; std::abs(c) < 2 && iter < MAX_ITERATIONS; ++iter) {
+            for (; std::abs(c) < 2 && iter < MAX_ITERATIONS; ++iter)
+            {
                 c = c * c + point;
             }
             cur_vertex.position = {(float)j, (float)i};

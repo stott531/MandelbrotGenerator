@@ -15,10 +15,6 @@ Window::Window(const int &height, const int &width, RunningMode mode) : m_camera
     this->create(sf::VideoMode(m_screen_width, m_screen_height), "Mandelbrot Set");
     if (!m_shader.loadFromFile("../src/mandelbrot_shader.frag", sf::Shader::Fragment))
     {
-        /*shader.setUniform("height", (float) m_screen_height);
-        shader.setUniform("height", (float) m_screen_width);
-        shader.setUniform("zoom_factor", (float) m_camera->GetZoom());
-        shader.setUniform("max_iterations", 50);*/
         std::cout << "Could not open shader";
         exit(1);
     }
@@ -39,16 +35,18 @@ void Window::Think()
         {
             //decide what to do with it
             switch (event.type) {
-                // close the window if the close button was pressed
                 case sf::Event::Closed:
                     this->close();
                     break;
                 case sf::Event::MouseWheelScrolled:
                     this->m_camera->Zoom(event.mouseWheelScroll);
+                    break;
                 case sf::Event::MouseButtonPressed:
                     this->m_camera->TogglePanning(event.mouseButton);
+                    break;
                 case sf::Event::MouseMoved:
                     this->m_camera->Pan(event.mouseMove);
+                    break;
                 default:
                     break;
             }
@@ -61,7 +59,8 @@ void Window::Think()
         else PlotMandelbrotSetShaders();
 
         float currentTime = clock.getElapsedTime().asSeconds();
-        float fps = 1.f / (currentTime);
+        float fps = 1.0 / currentTime;
+        std::cout << "FPS: " << fps << std::endl;
         clock.restart();
         this->display();
     }

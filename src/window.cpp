@@ -12,7 +12,7 @@ Window::Window(const int &height, const int &width) : m_camera(std::make_unique<
 {
     // setup a window for us
     this->create(sf::VideoMode(m_screen_width, m_screen_height), "Mandelbrot Set");
-    if (!m_shader.loadFromFile("../src/mandelbrot_shader.vert", sf::Shader::Fragment))
+    if (!m_shader.loadFromFile("../src/mandelbrot_shader.frag", sf::Shader::Fragment))
     {
         /*shader.setUniform("height", (float) m_screen_height);
         shader.setUniform("height", (float) m_screen_width);

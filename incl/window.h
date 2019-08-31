@@ -12,8 +12,6 @@
 
 #include "camera.h"
 
-#define MAX_ITERATIONS 150
-
 class Camera;
 
 using std::complex;
@@ -39,4 +37,5 @@ class Window : public sf::RenderWindow {
         sf::Shader m_shader;
         sf::VertexArray m_pixel_map;
         RunningMode m_mode;
+        static constexpr int m_max_iterations = 1000;
 };

@@ -90,14 +90,14 @@ void Window::PlotMandelbrotSetDefault() {
             // iterate while c is smaller than 2
             // if abs(c) > 2, the sequence diverges
             // make use of property |a+bi| == sqrt(a^2+b^2)
-            for (; c.real() * c.real() + c.imag() * c.imag() < 4 && iter < MAX_ITERATIONS; ++iter)
+            for (; c.real() * c.real() + c.imag() * c.imag() < 4 && iter < this->m_max_iterations; ++iter)
             {
                 c = c * c + point;
             }
             cur_vertex.position = {(float)j, (float)i};
 
             // this controls the precision of the drawing
-            if (iter >= MAX_ITERATIONS)
+            if (iter >= this->m_max_iterations)
             {
                 cur_vertex.color = sf::Color::Black;
             }
@@ -118,7 +118,7 @@ void Window::PlotMandelbrotSetShaders() {
     this->m_shader.setUniform("height", (float)this->m_screen_height);
     this->m_shader.setUniform("width", (float)this->m_screen_width);
     this->m_shader.setUniform("zoom_factor", this->m_camera->GetZoom());
-    this->m_shader.setUniform("max_iterations", MAX_ITERATIONS);
+    this->m_shader.setUniform("max_iterations", this->m_max_iterations);
     this->m_shader.setUniform("texture", this->m_texture.getTexture());
     this->m_shader.setUniform("h_shift", this->m_camera->h_shift);
     this->m_shader.setUniform("k_shift", this->m_camera->k_shift);

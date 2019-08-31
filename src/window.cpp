@@ -6,9 +6,10 @@
 #include <SFML/System/Time.hpp>
 #include <iostream>
 
-Window::Window(const int &height, const int &width) : m_camera(std::make_unique<Camera>(height, width, this)),
-                                                      m_screen_width(width),
-                                                      m_screen_height(height)
+Window::Window(const int &height, const int &width, RunningMode mode) : m_camera(std::make_unique<Camera>(height, width, this)),
+                                                                        m_screen_width(width),
+                                                                        m_screen_height(height),
+                                                                        m_mode(mode)
 {
     // setup a window for us
     this->create(sf::VideoMode(m_screen_width, m_screen_height), "Mandelbrot Set");
@@ -56,16 +57,9 @@ void Window::Think()
         // clear the display, draw the image, show the image
         this->clear();
 
-        sf::Sprite sprite(this->m_texture.getTexture());
-        this->m_shader.setUniform("height", (float)this->m_screen_height);
-        this->m_shader.setUniform("width", (float)this->m_screen_width);
-        this->m_shader.setUniform("zoom_factor", this->m_camera->GetZoom());
-        this->m_shader.setUniform("max_iterations", MAX_ITERATIONS);
-        this->m_shader.setUniform("texture", this->m_texture.getTexture());
-        this->m_shader.setUniform("h_shift", this->m_camera->h_shift);
-        this->m_shader.setUniform("k_shift", this->m_camera->k_shift);
+        if (this->m_mode == DefaultMode) PlotMandelbrotSetDefault();
+        else PlotMandelbrotSetShaders();
 
-        this->draw(sprite, &m_shader);
         float currentTime = clock.getElapsedTime().asSeconds();
         float fps = 1.f / (currentTime);
         clock.restart();
@@ -73,7 +67,6 @@ void Window::Think()
     }
 }
 
-/*
 void Window::PlotMandelbrotSetDefault() {
     // initialize variables outside loops to save memory
     sf::Vertex cur_vertex;
@@ -118,5 +111,18 @@ void Window::PlotMandelbrotSetDefault() {
             this->m_pixel_map[(i * m_screen_width) + j] = cur_vertex;
         }
     }
+    this->draw(this->m_pixel_map);
 }
- */
+
+void Window::PlotMandelbrotSetShaders() {
+    sf::Sprite sprite(this->m_texture.getTexture());
+    this->m_shader.setUniform("height", (float)this->m_screen_height);
+    this->m_shader.setUniform("width", (float)this->m_screen_width);
+    this->m_shader.setUniform("zoom_factor", this->m_camera->GetZoom());
+    this->m_shader.setUniform("max_iterations", MAX_ITERATIONS);
+    this->m_shader.setUniform("texture", this->m_texture.getTexture());
+    this->m_shader.setUniform("h_shift", this->m_camera->h_shift);
+    this->m_shader.setUniform("k_shift", this->m_camera->k_shift);
+
+    this->draw(sprite, &m_shader);
+}

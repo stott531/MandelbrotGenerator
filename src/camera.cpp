@@ -24,8 +24,8 @@ void Camera::Pan(const sf::Event::MouseMoveEvent &event)
     deltaMousePosition -= m_last_cursor;
 
     // Shift the view using the delta
-    h_shift += deltaMousePosition.x / 150. / m_zoom_factor;
-    k_shift += deltaMousePosition.y / 150. / m_zoom_factor;
+    h_shift += deltaMousePosition.x / 750. / m_zoom_factor;
+    k_shift -= deltaMousePosition.y / 750. / m_zoom_factor;
 
 
     // Set the last mouse position to be the mouse position in this frame

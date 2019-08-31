@@ -2,6 +2,6 @@
 
 int main()
 {
-    Window win(800, 1000);
+    Window win(800, 1000, ShaderMode);
     win.Think();
 }

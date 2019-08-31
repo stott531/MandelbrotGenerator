@@ -5,8 +5,9 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Event.hpp>
-#include <SFML/Graphics/VertexArray.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/Shader.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 
 #include "camera.h"
 
@@ -27,6 +28,7 @@ class Window : public sf::RenderWindow {
 
     private:
         unsigned int m_screen_width, m_screen_height;
-        sf::VertexArray m_pixel_map;
+        sf::RenderTexture m_texture;
         std::unique_ptr<Camera> m_camera;
+        sf::Shader m_shader;
 };

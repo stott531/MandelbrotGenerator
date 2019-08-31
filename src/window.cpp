@@ -6,21 +6,33 @@
 #include <SFML/System/Time.hpp>
 #include <iostream>
 
-Window::Window(const int &height, const int &width) : m_pixel_map(sf::Points, height * width),
-                                                      m_camera(std::make_unique<Camera>(height, width, this)),
+Window::Window(const int &height, const int &width) : m_camera(std::make_unique<Camera>(height, width, this)),
                                                       m_screen_width(width),
                                                       m_screen_height(height)
 {
     // setup a window for us
     this->create(sf::VideoMode(m_screen_width, m_screen_height), "Mandelbrot Set");
-    this->setFramerateLimit(30);
+    if (!m_shader.loadFromFile("../src/mandelbrot_shader.vert", sf::Shader::Fragment))
+    {
+        /*shader.setUniform("height", (float) m_screen_height);
+        shader.setUniform("height", (float) m_screen_width);
+        shader.setUniform("zoom_factor", (float) m_camera->GetZoom());
+        shader.setUniform("max_iterations", 50);*/
+        std::cout << "Could not open shader";
+        exit(1);
+    }
+    this->m_texture.create(m_screen_width, m_screen_height);
 }
 
 void Window::Think()
 {
+
     while (this->isOpen())
     {
         sf::Event event{};
+        sf::Clock clock;
+        float lastTime = 0;
+
         //get all input since the last iteration of the loop
         while (this->pollEvent(event))
         {
@@ -40,32 +52,28 @@ void Window::Think()
                     break;
             }
         }
-        sf::Clock clock;
-        if(true) this->PlotMandelbrotSetDefault();
-        std::cout << clock.getElapsedTime().asSeconds() << std::endl;
-
 
         // clear the display, draw the image, show the image
         this->clear();
-       /* sf::Shader shader;
-        if (shader.loadFromFile("../src/mandelbrot_shader.vert", sf::Shader::Fragment))
-        {
-            shader.setUniform("height", (float) m_screen_height);
-            shader.setUniform("height", (float) m_screen_width);
-            shader.setUniform("zoom_factor", (float) m_camera->GetZoom());
-            shader.setUniform("max_iterations", 50);
-            this->draw(this->m_pixel_map, &shader);
-        }
-        else
-        {
-            std::cout << "Could not open shader";
-            exit(1);
-        }*/
-        this->draw(this->m_pixel_map);
+
+        sf::Sprite sprite(this->m_texture.getTexture());
+        this->m_shader.setUniform("height", (float)this->m_screen_height);
+        this->m_shader.setUniform("width", (float)this->m_screen_width);
+        this->m_shader.setUniform("zoom_factor", this->m_camera->GetZoom());
+        this->m_shader.setUniform("max_iterations", MAX_ITERATIONS);
+        this->m_shader.setUniform("texture", this->m_texture.getTexture());
+        this->m_shader.setUniform("h_shift", this->m_camera->h_shift);
+        this->m_shader.setUniform("k_shift", this->m_camera->k_shift);
+
+        this->draw(sprite, &m_shader);
+        float currentTime = clock.getElapsedTime().asSeconds();
+        float fps = 1.f / (currentTime);
+        clock.restart();
         this->display();
     }
 }
 
+/*
 void Window::PlotMandelbrotSetDefault() {
     // initialize variables outside loops to save memory
     sf::Vertex cur_vertex;
@@ -89,7 +97,8 @@ void Window::PlotMandelbrotSetDefault() {
 
             // iterate while c is smaller than 2
             // if abs(c) > 2, the sequence diverges
-            for (; std::abs(c) < 2 && iter < MAX_ITERATIONS; ++iter)
+            // make use of property |a+bi| == sqrt(a^2+b^2)
+            for (; c.real() * c.real() + c.imag() * c.imag() < 4 && iter < MAX_ITERATIONS; ++iter)
             {
                 c = c * c + point;
             }
@@ -110,3 +119,4 @@ void Window::PlotMandelbrotSetDefault() {
         }
     }
 }
+ */

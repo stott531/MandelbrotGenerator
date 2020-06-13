@@ -2,6 +2,7 @@
 // Created by stott on 8/28/19.
 //
 
+#include <iostream>
 #include "../incl/camera.h"
 
 Camera::Camera(const int &screen_height, const int &screen_width, Window *window) :
@@ -38,3 +39,24 @@ void Camera::TogglePanning(const sf::Event::MouseButtonEvent& event) {
     if (event.button == sf::Mouse::Right) m_is_panning = !m_is_panning;
     m_last_cursor = {event.x, event.y};
 }
+
+void Camera::HandleKeyboardInput(const sf::Event::KeyEvent &event) {
+    switch (event.code)
+    {
+        case sf::Keyboard::Key::Q:
+            m_zoom_factor -= 1 / (m_zoom_factor * 10);
+        case sf::Keyboard::Key::E:
+            m_zoom_factor += 1 / (m_zoom_factor * 10);
+        case sf::Keyboard::Key::W:
+            k_shift -= 1. / 750. / m_zoom_factor;
+        case sf::Keyboard::Key::S:
+            k_shift += 1. / 750. / m_zoom_factor;
+        case sf::Keyboard::Key::A:
+            h_shift += 1. / 750. / m_zoom_factor;
+        case sf::Keyboard::Key::D:
+            h_shift -= 1. / 750. / m_zoom_factor;
+    }
+    std::cout << this->m_zoom_factor << std::endl;
+
+}
+

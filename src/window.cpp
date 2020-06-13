@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "openmp-use-default-none"
 /*
  * Created by Stephen Ott 8/28/2019
  */
@@ -46,6 +48,9 @@ void Window::Think()
                     break;
                 case sf::Event::MouseMoved:
                     this->m_camera->Pan(event.mouseMove);
+                    break;
+                case sf::Event::KeyPressed:
+                    this->m_camera->HandleKeyboardInput(event.key);
                     break;
                 default:
                     break;
@@ -125,3 +130,5 @@ void Window::PlotMandelbrotSetShaders() {
 
     this->draw(sprite, &m_shader);
 }
+
+#pragma clang diagnostic pop

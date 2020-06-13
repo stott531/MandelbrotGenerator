@@ -21,7 +21,9 @@ class Camera {
         void TogglePanning(const sf::Event::MouseButtonEvent& event);
         float h_shift = 1.5, k_shift = 0.5;
 
-    private:
+    void HandleKeyboardInput(const sf::Event::KeyEvent &event);
+
+private:
         sf::Vector2f m_center;
         float m_zoom_factor = 2.;
 

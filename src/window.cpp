@@ -65,7 +65,7 @@ void Window::Think()
 
         float currentTime = clock.getElapsedTime().asSeconds();
         float fps = 1.0 / currentTime;
-        std::cout << "FPS: " << fps << std::endl;
+        //std::cout << "FPS: " << fps << std::endl;
         clock.restart();
         this->display();
     }

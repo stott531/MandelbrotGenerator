@@ -44,19 +44,25 @@ void Camera::HandleKeyboardInput(const sf::Event::KeyEvent &event) {
     switch (event.code)
     {
         case sf::Keyboard::Key::Q:
-            m_zoom_factor -= 1 / (m_zoom_factor * 10);
+            m_zoom_factor -= 1 / (m_zoom_factor * 30);
+            break;
         case sf::Keyboard::Key::E:
-            m_zoom_factor += 1 / (m_zoom_factor * 10);
+            m_zoom_factor += 1 / (m_zoom_factor * 30);
+            break;
         case sf::Keyboard::Key::W:
-            k_shift -= 1. / 750. / m_zoom_factor;
+            k_shift -= 1. / 50. / m_zoom_factor;
+            break;
         case sf::Keyboard::Key::S:
-            k_shift += 1. / 750. / m_zoom_factor;
+            k_shift += 1. / 50. / m_zoom_factor;
+            break;
         case sf::Keyboard::Key::A:
-            h_shift += 1. / 750. / m_zoom_factor;
+            h_shift += 1. / 50. / m_zoom_factor;
+            break;
         case sf::Keyboard::Key::D:
-            h_shift -= 1. / 750. / m_zoom_factor;
+            h_shift -= 1. / 50. / m_zoom_factor;
+            break;
     }
-    std::cout << this->m_zoom_factor << std::endl;
+    std::cout << "zoom: " << this->m_zoom_factor  << "\th_shift: " << this->h_shift << "\tk_shift: " << this->k_shift<< std::endl;
 
 }
 

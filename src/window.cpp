@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "openmp-use-default-none"
 /*
  * Created by Stephen Ott 8/28/2019
  */
@@ -47,6 +49,9 @@ void Window::Think()
                 case sf::Event::MouseMoved:
                     this->m_camera->Pan(event.mouseMove);
                     break;
+                case sf::Event::KeyPressed:
+                    this->m_camera->HandleKeyboardInput(event.key);
+                    break;
                 default:
                     break;
             }
@@ -60,7 +65,7 @@ void Window::Think()
 
         float currentTime = clock.getElapsedTime().asSeconds();
         float fps = 1.0 / currentTime;
-        std::cout << "FPS: " << fps << std::endl;
+        //std::cout << "FPS: " << fps << std::endl;
         clock.restart();
         this->display();
     }
@@ -125,3 +130,5 @@ void Window::PlotMandelbrotSetShaders() {
 
     this->draw(sprite, &m_shader);
 }
+
+#pragma clang diagnostic pop
